@@ -70,7 +70,6 @@ public class TeddyMotionController : MonoBehaviour
         // Jump
         if (Input.GetKeyDown(KeyCode.Space) && (this.IsGrounded || this.RigidBody.velocity.y == 0f))
         {
-            Debug.Log("Jump");
             this.RigidBody.AddForce(Vector3.up * this.JumpStrength);
             this.IsGrounded = false;
 
@@ -93,14 +92,9 @@ public class TeddyMotionController : MonoBehaviour
                 if (collision.contacts[0].normal == Vector3.up)
                 {
                     this.IsGrounded = true;
-                    Debug.Log("grounded");
                     break;
                 }
             }
-        }
-        else
-        {
-            Debug.Log("not ground: " + collision.collider.gameObject.layer);
         }
     }
 
