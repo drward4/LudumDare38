@@ -1,90 +1,62 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class TeddyController : MonoBehaviour
 {
-    public float Sensitivity;
-    public float MovementSpeed;
-    public float CameraFollowDistance;
-    public GameObject LookRotationObject;
-    Animator Animator;
+    public GameObject TeddyRagdoll;
+    public GameObject TeddyAnimated;
+    public Possessable Possessable;
 
-    private Rigidbody RigidBody;
-    private Quaternion StartOrientation;
-    private Vector3 LookObjectStartPositionOffset;
-    private float RotationX, RotationY;
+
+    public bool IsPossessed()
+    {
+        return this.TeddyAnimated.activeSelf;
+    }
+
 
     void Start()
     {
-        this.StartOrientation = this.LookRotationObject.transform.localRotation;
-        this.LookObjectStartPositionOffset = this.LookRotationObject.transform.position - this.transform.position;
-        this.RigidBody = this.GetComponent<Rigidbody>();
-        this.Animator = this.GetComponent<Animator>();
+        this.Possessable.BeginPossession += this.BeginPossession;
+        this.Possessable.EndPossession += this.EndPossession;
+    }
+
+
+    public void BeginPossession(Vector3 position)
+    {
+        Debug.Log("begin possession");
+        this.TeddyRagdoll.SetActive(false);
+
+        // Move animated teddy to same location as ragdoll teddy without messing up the y axis
+        this.TeddyAnimated.transform.position = new Vector3(
+            position.x, 
+            this.TeddyAnimated.transform.position.y,
+            position.z);
+
+        this.TeddyAnimated.SetActive(true);
+    }
+
+
+    public void EndPossession()
+    {
+        Debug.Log("end possession");
+        this.TeddyAnimated.SetActive(false);
+
+        this.TeddyRagdoll.transform.position = new Vector3(
+            this.TeddyAnimated.transform.position.x,
+            this.TeddyAnimated.transform.position.y,
+            this.TeddyAnimated.transform.position.z);
+
+        this.TeddyRagdoll.SetActive(true);
     }
 
 
     void Update()
     {
-        this.RotationX += Input.GetAxis("Mouse X") * Sensitivity;
-        this.RotationY += Input.GetAxis("Mouse Y") * Sensitivity;
-
-        Quaternion x = Quaternion.AngleAxis(this.RotationX, Vector3.up);
-        Quaternion y = Quaternion.AngleAxis(this.RotationY, Vector3.left);
-
-        this.transform.localRotation = this.StartOrientation * x;
-
-        // Important that this rotation is applied after the parent object rotation
-        this.LookRotationObject.transform.localRotation = this.StartOrientation * x * y;
-
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKeyUp(KeyCode.Space) && this.IsPossessed())
         {
-            Vector3 direction = this.transform.forward;
-            direction = direction.normalized * this.MovementSpeed;
-            //direction.y = 0f;
-
-            // Don't mess with gravity
-            this.RigidBody.velocity = new Vector3(direction.x, this.RigidBody.velocity.y, direction.z);
-
-            if (!this.Animator.GetBool("IsRunning"))
-            {
-                this.Animator.SetBool("IsRunning", true);
-            }
+            GameController.EndPossession(this.Possessable);
         }
-        else
-        {
-            this.RigidBody.velocity = new Vector3(0f, this.RigidBody.velocity.y, 0f);
-
-            if (this.Animator.GetBool("IsRunning"))
-            {
-                this.Animator.SetBool("IsRunning", false);
-            }
-        }
-
-        Debug.Log(this.RigidBody.velocity);
-
-        //if (Input.GetKey(KeyCode.S))
-        //{
-        //    this.RigidBody.velocity -= this.transform.forward.normalized * this.MovementSpeed;
-        //}
-
-        //if (Input.GetKey(KeyCode.D))
-        //{
-        //    this.RigidBody.velocity += this.transform.right.normalized * this.MovementSpeed;
-        //}
-
-        //if (Input.GetKey(KeyCode.A))
-        //{
-        //    this.RigidBody.velocity -= this.transform.right.normalized * this.MovementSpeed;
-        //}
-
-        Camera.main.transform.position = this.LookRotationObject.transform.position - this.LookRotationObject.transform.forward * this.CameraFollowDistance;
-        Camera.main.transform.LookAt(this.LookRotationObject.transform);
-    }
-
-
-    void FixedUpdate()
-    {
-        this.LookRotationObject.transform.position = this.transform.position + this.LookObjectStartPositionOffset;
     }
 }
