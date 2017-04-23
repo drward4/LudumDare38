@@ -8,7 +8,6 @@ public class TeddyController : MonoBehaviour
     public GameObject TeddyRagdoll;
     public GameObject TeddyAnimated;
     public Possessable Possessable;
-    public Transform HandTransform;
     public bool HasKey;
     public bool HasHammer;
     private bool InRangeOfKey;
@@ -43,7 +42,7 @@ public class TeddyController : MonoBehaviour
 
         this.TeddyAnimated.SetActive(true);
 
-        GameController.ShowControls(this.Possessable.ObjectName + " Controls\n\nMove Forward - W\nTurn / Look - Mouse\nLeave Body - Esc");
+        GameController.ShowControls(this.Possessable.ObjectName + " Controls\n\nMove Forward - W\nTurn / Look - Mouse\nLeave Body - X");
     }
 
 
@@ -94,6 +93,10 @@ public class TeddyController : MonoBehaviour
             if (this.HasHammer)
             {
                 GameController.ShowMessage("Smash Window - E");
+            }
+            else
+            {
+                GameController.ShowMessage("Need something to smash it");
             }
         }
     }
@@ -148,7 +151,7 @@ public class TeddyController : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyUp(KeyCode.Escape) && this.IsPossessed())
+        if (Input.GetKeyUp(KeyCode.X) && this.IsPossessed())
         {
             GameController.EndPossession(this.Possessable);
         }

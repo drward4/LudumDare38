@@ -19,7 +19,7 @@ public class HelicopterMotionController : MonoBehaviour
 
     private void ShowControls()
     {
-        GameController.ShowControls("HELICOPTER CONTROLS\n\nMove - WASD\nTurn - Mouse\nLeave Body - Esc");
+        GameController.ShowControls("HELICOPTER CONTROLS\n\nMove - WASD\nTurn - Mouse\nLeave Body - X");
     }
 
 
@@ -40,7 +40,7 @@ public class HelicopterMotionController : MonoBehaviour
             return;
         }
 
-        if (Input.GetKeyUp(KeyCode.Escape))
+        if (Input.GetKeyUp(KeyCode.X))
         {
             GameController.EndPossession(this.Possessable);
         }
@@ -69,7 +69,7 @@ public class HelicopterMotionController : MonoBehaviour
 
     public void BeginPossession(Vector3 position)
     {
-        GameController.ShowControls(this.Possessable.ObjectName + " Controls\n\nMove WASD\nLeave Body - Esc");
+        GameController.ShowControls(this.Possessable.ObjectName + " Controls\n\nMove WASD\nLeave Body - X");
         this.RigidBody.useGravity = false;
         this.IsPossessed = true;
     }

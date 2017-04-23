@@ -29,7 +29,7 @@ public class TruckMotionController : MonoBehaviour
 
     public void BeginPossession(Vector3 position)
     {
-        GameController.ShowControls(this.Possessable.ObjectName + " Controls\n\nMove WASD\nLeave Body - Esc");
+        GameController.ShowControls(this.Possessable.ObjectName + " Controls\n\nMove WASD\nLeave Body - X");
         this.IsPossessed = true;
     }
 
@@ -47,7 +47,7 @@ public class TruckMotionController : MonoBehaviour
             return;
         }
 
-        if (Input.GetKeyUp(KeyCode.Escape))
+        if (Input.GetKeyUp(KeyCode.X))
         {
             GameController.EndPossession(this.Possessable);
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -21,6 +22,10 @@ public class GameController : MonoBehaviour
     public GameObject KeyIcon;
     public GameObject HammerIcon;
 
+    public GameObject GameOverPanel;
+    public GameObject MainMenu;
+    public GameObject PausePanel;
+
     void Awake()
     {
         if (_Instance == null)
@@ -32,11 +37,60 @@ public class GameController : MonoBehaviour
 
 	void Start ()
     {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Confined;
-    
+        Time.timeScale = 0f;
+        this.MainMenu.SetActive(true);
     }
 
+
+    public void BeginGame()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
+        Time.timeScale = 1f;
+        this.MainMenu.SetActive(false);
+    }
+
+
+    public void PauseGame()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        Time.timeScale = 0f;
+        this.PausePanel.SetActive(true);
+    }
+
+
+    public void ResumeGame()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
+        Time.timeScale = 1f;
+        this.PausePanel.SetActive(false);
+    }
+
+
+
+
+    public void EndGame()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        this.GameOverPanel.SetActive(true);
+    }
+
+
+    public void QuitGame()
+    {
+        Debug.Log("quit");
+        Application.Quit();
+    }
+
+
+    public void RestartLevel()
+    {
+        Debug.Log("restart");
+        SceneManager.LoadScene(0);
+    }
 
     public static void BeginPossesion(Possessable possessable)
     {
@@ -113,7 +167,24 @@ public class GameController : MonoBehaviour
 
     public static void SmashWindow()
     {
+        _Instance.EndGame();
         HideMessage();
     }
 
+
+    void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.Escape) && !this.GameOverPanel.activeSelf && !this.MainMenu.activeSelf)
+        {
+            if (this.PausePanel.activeSelf)
+            {
+                Debug.Log("resumio");
+                this.ResumeGame();
+            }
+            else
+            {
+                this.PauseGame();
+            }
+        }
+    }
 }
