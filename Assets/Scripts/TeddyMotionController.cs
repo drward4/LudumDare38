@@ -18,7 +18,7 @@ public class TeddyMotionController : MonoBehaviour
     private Vector3 LookObjectStartPositionOffset;
     private float RotationX, RotationY;
     public bool IsGrounded;
-    public bool IsColliding;
+    public int CollisionCount;
 
     void Start()
     {
@@ -42,7 +42,7 @@ public class TeddyMotionController : MonoBehaviour
                 // Don't mess with gravity
                 this.RigidBody.velocity = new Vector3(direction.x, this.RigidBody.velocity.y, direction.z);
             }
-            else if (!this.IsColliding)
+            else if (this.CollisionCount == 0)
             {
                 Vector3 velocity = this.RigidBody.velocity;
                 velocity.y = 0f;
@@ -68,11 +68,12 @@ public class TeddyMotionController : MonoBehaviour
         }
 
         // Jump
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && (this.IsGrounded || this.RigidBody.velocity.y == 0f))
         {
             Debug.Log("Jump");
             this.RigidBody.AddForce(Vector3.up * this.JumpStrength);
             this.IsGrounded = false;
+
             if (this.Animator.GetBool("IsRunning"))
             {
                 this.Animator.SetBool("IsRunning", false);
@@ -83,7 +84,7 @@ public class TeddyMotionController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        this.IsColliding = true;
+        ++CollisionCount;
 
         if (collision.collider.gameObject.layer == 12)
         {
@@ -104,9 +105,9 @@ public class TeddyMotionController : MonoBehaviour
     }
 
 
-    void OnCollisionStay(Collision collision)
+    void OnCollisionExit(Collision collision)
     {
-        this.IsColliding = true;
+        --this.CollisionCount;
     }
 
 
@@ -124,7 +125,6 @@ public class TeddyMotionController : MonoBehaviour
         this.LookRotationObject.transform.localRotation = this.StartOrientation * x * y;
 
         this.ProcessInput();
-
     }
 
 
@@ -140,11 +140,5 @@ public class TeddyMotionController : MonoBehaviour
         //{
         //    this.RigidBody.velocity = this.RigidBody.velocity.normalized * this.MaxSpeed;
         //}
-    }
-
-
-    void LateUpdate()
-    {
-        this.IsColliding = false;
     }
 }
