@@ -15,6 +15,7 @@ public class TruckMotionController : MonoBehaviour
 
     void Start()
     {
+        this.Possessable.ObjectName = "Truck";
         this.Possessable.BeginPossession += this.BeginPossession;
         this.Possessable.EndPossession += this.EndPossession;
     }
@@ -28,6 +29,7 @@ public class TruckMotionController : MonoBehaviour
 
     public void BeginPossession(Vector3 position)
     {
+        GameController.ShowControls(this.Possessable.ObjectName + " Controls\n\nMove WASD\nLeave Body - Esc");
         this.IsPossessed = true;
     }
 

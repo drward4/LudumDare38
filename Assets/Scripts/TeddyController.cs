@@ -18,6 +18,7 @@ public class TeddyController : MonoBehaviour
 
     void Start()
     {
+        this.Possessable.ObjectName = "Teddy";
         this.Possessable.BeginPossession += this.BeginPossession;
         this.Possessable.EndPossession += this.EndPossession;
     }
@@ -25,7 +26,6 @@ public class TeddyController : MonoBehaviour
 
     public void BeginPossession(Vector3 position)
     {
-        Debug.Log("begin possession");
         this.TeddyRagdoll.SetActive(false);
 
         // Move animated teddy to same location as ragdoll teddy without messing up the y axis
@@ -35,12 +35,13 @@ public class TeddyController : MonoBehaviour
             position.z);
 
         this.TeddyAnimated.SetActive(true);
+
+        GameController.ShowControls(this.Possessable.ObjectName + " Controls\n\nMove Forward - W\nTurn / Look - Mouse\nLeave Body - Esc");
     }
 
 
     public void EndPossession()
     {
-        Debug.Log("end possession");
         this.TeddyAnimated.SetActive(false);
 
         this.TeddyRagdoll.transform.position = new Vector3(

@@ -12,12 +12,25 @@ public class SoulController : MonoBehaviour
     private float RotationX, RotationY;
     private Possessable CollidingPossessable;
 
-	void Start ()
+    private void ShowControls()
+    {
+        GameController.ShowControls("SOUL CONTROLS\n\nMove - WASD\nTurn - Mouse");
+    }
+
+
+    void Start ()
     {
         this.StartOrientation = this.transform.localRotation;
         this.RigidBody = this.GetComponent<Rigidbody>();
-	}
-	
+        this.ShowControls();
+    }
+
+
+    void OnEnable()
+    {
+        this.ShowControls();
+    }
+
 
     private void ProcessInput()
     {
@@ -43,6 +56,7 @@ public class SoulController : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.E) && this.CollidingPossessable !=null)
         {
+            GameController.HideMessage();
             GameController.BeginPossesion(this.CollidingPossessable);
         }
     }
@@ -50,20 +64,22 @@ public class SoulController : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == 11)
+
+        if (other.gameObject.layer == 11)  // Possessable Object
         {
             this.CollidingPossessable = other.gameObject.GetComponent<Possessable>();
-            GameController.ShowMessage("Press E to Possess");
+            GameController.ShowMessage("Possess " + this.CollidingPossessable.ObjectName + " - E");
         }
     }
 
 
     void OnTriggerExit(Collider other)
     {
+        GameController.HideMessage();
+
         if (other.gameObject.layer == 11)
         {
             this.CollidingPossessable = null;
-            GameController.HideMessage();
         }
     }
 

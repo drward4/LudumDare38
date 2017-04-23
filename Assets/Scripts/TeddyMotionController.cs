@@ -19,6 +19,12 @@ public class TeddyMotionController : MonoBehaviour
     private float RotationX, RotationY;
     public bool IsGrounded;
     public int CollisionCount;
+    public bool HasKey;
+    public bool HasHammer;
+    private bool InRangeOfKey;
+    private bool InRangeOfHammer;
+    private bool InRangeOfToyChest;
+    private bool InRangeOfWindow;
 
     void Start()
     {
@@ -30,6 +36,29 @@ public class TeddyMotionController : MonoBehaviour
 
     private void ProcessInput()
     {
+        if (Input.GetKey(KeyCode.E))
+        {
+            if (this.InRangeOfKey)
+            {
+                this.HasKey = true;
+            }
+
+            if (this.InRangeOfHammer)
+            {
+                this.HasHammer = true;
+            }
+            
+            if (this.InRangeOfToyChest && this.HasKey) // Check during process input in case of picking up key while near toy chest
+            {
+                GameController.ShowMessage("Open Toy Chest - E");
+            }
+
+            if (this.InRangeOfWindow && this.HasHammer)  // Check during process input in case hammer somehow lands next to window
+            {
+                GameController.ShowMessage("Smash Window - E");
+            }
+        }
+
         // Move Forward
         // Can move partially if in the air as long as not colliding with anything
         if (Input.GetKey(KeyCode.W))
@@ -85,7 +114,7 @@ public class TeddyMotionController : MonoBehaviour
     {
         ++CollisionCount;
 
-        if (collision.collider.gameObject.layer == 12)
+        if (collision.collider.gameObject.layer == 9 || collision.collider.gameObject.layer == 12) // Can walk on Toys or Ground
         {
             for (int i = 0; i < collision.contacts.Length; i++)
             {
@@ -102,6 +131,61 @@ public class TeddyMotionController : MonoBehaviour
     void OnCollisionExit(Collision collision)
     {
         --this.CollisionCount;
+    }
+
+
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == 13)  // Key
+        {
+            this.InRangeOfKey = true;
+            GameController.ShowMessage("Pick up - E");
+        }
+        else if (other.gameObject.layer == 14)  // Hammer
+        {
+            this.InRangeOfHammer = true;
+            GameController.ShowMessage("Pick up - E");
+        }
+        else if (other.gameObject.layer == 15)  // Toy Chest
+        {
+            this.InRangeOfToyChest = true;
+            if (this.HasKey)
+            {
+                GameController.ShowMessage("Open Toy Chest - E");
+            }
+        }
+        else if (other.gameObject.layer == 16)  // Window
+        {
+            this.InRangeOfWindow = true;
+            if (this.HasHammer)
+            {
+                GameController.ShowMessage("Smash Window - E");
+            }
+        }
+    }
+
+
+    void OnTriggerExit(Collider other)
+    {
+        GameController.HideMessage();
+
+        if (other.gameObject.layer == 13)  // Key
+        {
+            this.InRangeOfKey = false;
+        }
+        else if (other.gameObject.layer == 14)  // Hammer
+        {
+            this.InRangeOfHammer = false;
+        }
+        else if (other.gameObject.layer == 15)  // Toy Chest
+        {
+            this.InRangeOfToyChest = false;
+        }
+        else if (other.gameObject.layer == 16)  // Window
+        {
+            this.InRangeOfWindow = false;
+        }
     }
 
 
