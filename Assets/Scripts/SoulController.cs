@@ -75,10 +75,9 @@ public class SoulController : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        GameController.HideMessage();
-
         if (other.gameObject.layer == 11)
         {
+            GameController.HideMessage();
             this.CollidingPossessable = null;
         }
     }

@@ -5,13 +5,21 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
+    private static GameController _Instance;
+
     public SoulController Soul;
+    public TeddyController Teddy;
+    public GameObject Key;
+    public GameObject Hammer;
+    public GameObject Window;
+    public GameObject ToyChestTop;
+
     public GameObject ControlsPanel;
     public Text ControlsLabel;
     public GameObject MessagePanel;
     public Text MessageLabel;
-
-    private static GameController _Instance;
+    public GameObject KeyIcon;
+    public GameObject HammerIcon;
 
     void Awake()
     {
@@ -75,28 +83,37 @@ public class GameController : MonoBehaviour
 
     public static void PickUpKey()
     {
-
-
-
+        _Instance.Key.SetActive(false);
+        _Instance.KeyIcon.SetActive(true);
+        HideMessage();
     }
 
 
     public static void PickUpHammer()
     {
+        _Instance.Hammer.SetActive(false);
+        _Instance.HammerIcon.SetActive(true);
+        HideMessage();
+    }
 
+
+    public static bool IsChestOpen()
+    {
+        return !_Instance.ToyChestTop.activeSelf;
     }
 
 
     public static void OpenToyChest()
     {
-
+        _Instance.ToyChestTop.SetActive(false);
+        HideMessage();
     }
 
 
 
     public static void SmashWindow()
     {
-
+        HideMessage();
     }
 
 }
