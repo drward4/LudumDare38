@@ -46,7 +46,8 @@ public class TeddyController : MonoBehaviour
         this.TeddyRagdoll.transform.position = new Vector3(
             this.TeddyAnimated.transform.position.x,
             this.TeddyAnimated.transform.position.y,
-            this.TeddyAnimated.transform.position.z);
+            this.TeddyAnimated.transform.position.z) 
+            + Vector3.up * 1.5f;
 
         this.TeddyRagdoll.SetActive(true);
     }
@@ -54,7 +55,7 @@ public class TeddyController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Space) && this.IsPossessed())
+        if (Input.GetKeyUp(KeyCode.Escape) && this.IsPossessed())
         {
             GameController.EndPossession(this.Possessable);
         }

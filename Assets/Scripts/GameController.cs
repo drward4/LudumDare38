@@ -27,7 +27,7 @@ public class GameController : MonoBehaviour
     {
         possessable.BeginPossession(_Instance.Soul.transform.position);
         RenderSettings.fog = false;
-        GameController.ShowMessage("Press Space to Leave");
+        GameController.ShowMessage("Press Escape to Leave");
         _Instance.Soul.gameObject.SetActive(false);
     }
 
@@ -52,14 +52,5 @@ public class GameController : MonoBehaviour
     public static void HideMessage()
     {
         _Instance.MessagePanel.SetActive(false);
-    }
-
-
-    void Update()
-    {
-        if (Input.GetKeyUp(KeyCode.Escape))
-        {
-            Debug.Break();
-        }
     }
 }

@@ -41,7 +41,7 @@ public class SoulController : MonoBehaviour
             this.RigidBody.velocity -= this.transform.right.normalized * this.MovementSpeed;
         }
 
-        if (Input.GetKeyUp(KeyCode.Space) && this.CollidingPossessable !=null)
+        if (Input.GetKeyUp(KeyCode.E) && this.CollidingPossessable !=null)
         {
             GameController.BeginPossesion(this.CollidingPossessable);
         }
@@ -53,7 +53,7 @@ public class SoulController : MonoBehaviour
         if (other.gameObject.layer == 11)
         {
             this.CollidingPossessable = other.gameObject.GetComponent<Possessable>();
-            GameController.ShowMessage("Press Space to Possess");
+            GameController.ShowMessage("Press E to Possess");
         }
     }
 
