@@ -104,7 +104,10 @@ public class TeddyController : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        GameController.HideMessage();
+        if (other.gameObject.layer >= 13 && other.gameObject.layer <= 16)
+        {
+            GameController.HideMessage();
+        }
 
         if (other.gameObject.layer == 13)  // Key
         {

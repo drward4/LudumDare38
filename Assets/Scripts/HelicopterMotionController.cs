@@ -29,7 +29,6 @@ public class HelicopterMotionController : MonoBehaviour
         this.Possessable.BeginPossession += this.BeginPossession;
         this.Possessable.EndPossession += this.EndPossession;
         this.StartOrientation = this.transform.localRotation;
-        this.ShowControls();
     }
 
 
