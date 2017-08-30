@@ -36,9 +36,9 @@ public class TeddyController : MonoBehaviour
 
         // Move animated teddy to same location as ragdoll teddy without messing up the y axis
         this.TeddyAnimated.transform.position = new Vector3(
-            position.x, 
+            this.TeddyRagdoll.transform.position.x, 
             this.TeddyAnimated.transform.position.y,
-            position.z);
+            this.TeddyRagdoll.transform.position.z);
 
         this.TeddyAnimated.SetActive(true);
 

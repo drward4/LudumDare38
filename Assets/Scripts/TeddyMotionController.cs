@@ -6,6 +6,7 @@ public class TeddyMotionController : MonoBehaviour
 {
     public float Sensitivity;
     public float MaxSpeed;
+    public float Force;
     public float MaxAirSpeed;
     public float InAirMoveSpeed;
     public float JumpStrength;
@@ -40,9 +41,10 @@ public class TeddyMotionController : MonoBehaviour
 
             if (this.IsGrounded)
             {
-                direction *= this.MaxSpeed;
-                // Don't mess with gravity
-                this.RigidBody.velocity = new Vector3(direction.x, this.RigidBody.velocity.y, direction.z);
+                direction *= this.Force;
+
+                if (this.RigidBody.velocity.magnitude < this.MaxSpeed)
+                    this.RigidBody.AddForce(direction, ForceMode.Impulse);
             }
             else if (this.CollisionCount == 0)
             {
@@ -91,7 +93,7 @@ public class TeddyMotionController : MonoBehaviour
         {
             for (int i = 0; i < collision.contacts.Length; i++)
             {
-                if (collision.contacts[0].normal == Vector3.up)
+                if (Vector3.Dot(collision.contacts[0].normal, Vector3.up) > 0.1f)
                 {
                     this.IsGrounded = true;
                     break;
@@ -131,11 +133,5 @@ public class TeddyMotionController : MonoBehaviour
         
         Camera.main.transform.position = this.LookRotationObject.transform.position - this.LookRotationObject.transform.forward * this.CameraFollowDistance;
         Camera.main.transform.LookAt(this.LookRotationObject.transform);
-
-        //float magnitude = this.RigidBody.velocity.sqrMagnitude;
-        //if (magnitude > this.MaxSpeed)
-        //{
-        //    this.RigidBody.velocity = this.RigidBody.velocity.normalized * this.MaxSpeed;
-        //}
     }
 }
