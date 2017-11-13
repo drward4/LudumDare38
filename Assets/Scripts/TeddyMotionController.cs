@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TeddyMotionController : MonoBehaviour
 {
+    public TeddyController Controller;
     public float Sensitivity;
     public float MaxSpeed;
     public float Force;
@@ -111,6 +112,9 @@ public class TeddyMotionController : MonoBehaviour
 
     void Update()
     {
+        if (!this.Controller.IsPossessed())
+            return;
+
         this.RotationX += Input.GetAxis("Mouse X") * Sensitivity;
         this.RotationY += Input.GetAxis("Mouse Y") * Sensitivity;
 
@@ -128,6 +132,9 @@ public class TeddyMotionController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!this.Controller.IsPossessed())
+            return;
+
         this.ControllerObject.transform.position = this.transform.position;
         this.LookRotationObject.transform.position = this.transform.position + this.LookObjectStartPositionOffset;
         

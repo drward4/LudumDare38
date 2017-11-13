@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class TeddyController : MonoBehaviour
 {
-    public GameObject TeddyRagdoll;
-    public GameObject TeddyAnimated;
+    public AnimatedRagdoll MotionController;
     public Possessable Possessable;
     public bool HasKey;
     public bool HasHammer;
@@ -14,11 +13,11 @@ public class TeddyController : MonoBehaviour
     private bool InRangeOfHammer;
     private bool InRangeOfToyChest;
     private bool InRangeOfWindow;
-
+    private bool _IsPossessed;
 
     public bool IsPossessed()
     {
-        return this.TeddyAnimated.activeSelf;
+        return this._IsPossessed;
     }
 
 
@@ -27,20 +26,31 @@ public class TeddyController : MonoBehaviour
         this.Possessable.ObjectName = "Teddy";
         this.Possessable.BeginPossession += this.BeginPossession;
         this.Possessable.EndPossession += this.EndPossession;
+
+        this.SetPossessionState(false);
+    }
+
+
+    private void SetPossessionState(bool possessed)
+    {
+        this._IsPossessed = possessed;
+        this.MotionController.SetState(possessed);
     }
 
 
     public void BeginPossession(Vector3 position)
     {
-        this.TeddyRagdoll.SetActive(false);
+        this.SetPossessionState(true);
 
-        // Move animated teddy to same location as ragdoll teddy without messing up the y axis
-        this.TeddyAnimated.transform.position = new Vector3(
-            this.TeddyRagdoll.transform.position.x, 
-            this.TeddyAnimated.transform.position.y,
-            this.TeddyRagdoll.transform.position.z);
+        //this.TeddyRagdoll.SetActive(false);
 
-        this.TeddyAnimated.SetActive(true);
+        //// Move animated teddy to same location as ragdoll teddy without messing up the y axis
+        //this.TeddyAnimated.transform.position = new Vector3(
+        //    this.TeddyRagdoll.transform.position.x, 
+        //    this.TeddyAnimated.transform.position.y,
+        //    this.TeddyRagdoll.transform.position.z);
+
+        //this.TeddyAnimated.SetActive(true);
 
         GameController.ShowControls(this.Possessable.ObjectName + " Controls\n\nMove Forward - W\nTurn / Look - Mouse\nLeave Body - X");
     }
@@ -48,15 +58,17 @@ public class TeddyController : MonoBehaviour
 
     public void EndPossession()
     {
-        this.TeddyAnimated.SetActive(false);
+        this.SetPossessionState(false);
 
-        this.TeddyRagdoll.transform.position = new Vector3(
-            this.TeddyAnimated.transform.position.x,
-            this.TeddyAnimated.transform.position.y,
-            this.TeddyAnimated.transform.position.z) 
-            + Vector3.up * 1.5f;
+        //this.TeddyAnimated.SetActive(false);
 
-        this.TeddyRagdoll.SetActive(true);
+        //this.TeddyRagdoll.transform.position = new Vector3(
+        //    this.TeddyAnimated.transform.position.x,
+        //    this.TeddyAnimated.transform.position.y,
+        //    this.TeddyAnimated.transform.position.z) 
+        //    + Vector3.up * 1.5f;
+
+        //this.TeddyRagdoll.SetActive(true);
     }
 
 
